@@ -23,7 +23,8 @@ enum sofle_layers {
     _COLEMAK,
     _LOWER,
     _RAISE,
-    _ADJUST
+    _ADJUST,
+    _DESKTOP
 };
 
 enum custom_keycodes { KC_LSTRT = SAFE_RANGE, KC_LEND, KC_RARROW, KC_ELIXIRPIPE, KC_DOUBLEARROW, KC_LARROW, KC_HASHROCKET, KC_COLEMAK };
@@ -35,7 +36,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
      * |  `   |   Q  |   W  |   F  |   P  |   B  |                    |   J  |   L  |   U  |   Y  |   ;  | <-   |
      * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
-     * |  /   |LT_A/A|LT_R/R|LT_L/S| LS/T |   G  |-------.    ,-------|   M  | LS/N |LT_L/E|LT_R/I|LT_A/O|  '   |
+     * |  /   |LT_A/A|LT_R/R|LT_L/S| LS/T |LT_D/G|-------.    ,-------|   M  | LS/N |LT_L/E|LT_R/I|LT_A/O|  '   |
      * |------+------+------+------+------+------| Mute  |    | DT Pri|------+------+------+------+------+------|
      * |  [   |   Z  |   X  |   C  |   D  |   V  |-------|    |-------|   K  |   H  |   ,  |   .  | TT A |  ]   |
      * `-----------------------------------------/       /     \      \-----------------------------------------'
@@ -50,7 +51,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /* second line */
         KC_GRV, KC_Q, KC_W, KC_F, KC_P, KC_B, KC_J, KC_L, KC_U, KC_Y, KC_SCLN, KC_BSPC,
         /* third line */
-        KC_SLSH, LT(_ADJUST, KC_A), LT(_RAISE, KC_R), LT(_LOWER, KC_S), LSFT_T(KC_T), KC_G, KC_M, RSFT_T(KC_N), LT(_LOWER, KC_E), LT(_RAISE, KC_I), LT(_ADJUST, KC_O), KC_QUOT,
+        KC_SLSH, LT(_ADJUST, KC_A), LT(_RAISE, KC_R), LT(_LOWER, KC_S), LSFT_T(KC_T), LT(_DESKTOP, KC_G), KC_M, RSFT_T(KC_N), LT(_LOWER, KC_E), LT(_RAISE, KC_I), LT(_ADJUST, KC_O), KC_QUOT,
         /* fourth line */
         KC_LBRC, KC_Z, KC_X, KC_C, KC_D, KC_V, KC_MUTE, DT_PRNT, KC_K, KC_H, KC_COMM, KC_DOT, KC_BSLS, KC_RBRC,
         /* thumb keys */
@@ -59,11 +60,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * ,-----------------------------------------.                    ,-----------------------------------------.
      * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
      * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
-     * |      |  !   |  @   |  /   |  \   | ~    |                    |      |   7  |   8  |   9  |      |      |
+     * |      |  !   |  @   |  /   |  \   | ~    |                    |      |   7  |   8  |   9  |  -   |      |
      * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
-     * |      |  [   |  ]   |  (   | LS/) |      |-------.    ,-------|      | RS/4 |   5  |   6  |      |      |
+     * |      |  [   |  ]   |  (   | LS/) |  +   |-------.    ,-------|      | RS/4 |   5  |   6  |  +   |      |
      * |------+------+------+------+------+------|       |    |       |------+------+------+------+------+------|
-     * |      |      |      |      |  *   |      |-------|    |-------|   0  |   1  |   2  |   3  |   .  |      |
+     * |      |      |      |  _   |  *   |  -   |-------|    |-------|   0  |   1  |   2  |   3  |   .  |      |
      * `-----------------------------------------/       /     \      \-----------------------------------------'
      *            | TT 1 |      | LC_t |LG_t  | /LA_t   /       \ RA_t \  |RG_t  | RC_t |  -    |  =   |
      *            |      |      | Tab  |Spc   |/  Esc  /         \Enter \ |Spc   | CAPS |       |      |
@@ -73,11 +74,11 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /* first line */
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         /* second line */
-        XXXXXXX, KC_EXLM, KC_AT, KC_SLSH, KC_BSLS, KC_TILD, XXXXXXX, KC_7, KC_8, KC_9, XXXXXXX, _______,
+        XXXXXXX, KC_EXLM, KC_AT, KC_SLSH, KC_BSLS, KC_TILD, XXXXXXX, KC_7, KC_8, KC_9, KC_KP_MINUS, _______,
         /* third line */
-        XXXXXXX, KC_LBRC, KC_RBRC, KC_LPRN, LSFT_T(KC_0), XXXXXXX, XXXXXXX, RSFT_T(KC_4), KC_5, KC_6, XXXXXXX, XXXXXXX,
+        XXXXXXX, KC_LBRC, KC_RBRC, KC_LPRN, LSFT_T(KC_0), KC_PLUS, XXXXXXX, RSFT_T(KC_4), KC_5, KC_6, KC_KP_PLUS, XXXXXXX,
         /* fourth line */
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_ASTR, XXXXXXX, XXXXXXX, XXXXXXX, KC_0, KC_1, KC_2, KC_3, KC_DOT, XXXXXXX,
+        XXXXXXX, XXXXXXX, XXXXXXX, KC_UNDS, KC_ASTR, KC_MINUS, XXXXXXX, XXXXXXX, KC_0, KC_1, KC_2, KC_3, KC_DOT, XXXXXXX,
         /* thumb keys */
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
     /* RAISE
@@ -107,13 +108,13 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
     /*
      * ,-----------------------------------------.                    ,-------------------------------------------------------------.
-     * |      |      |      |      |      |      |                    | COLEMAK |  QWERTY   |         |           |         |         |
+     * |      |      |      |      |      |      |                    | COLEMAK |           |         |           |         |         |
      * |------+------+------+------+------+------|                    |---------+-----------+---------+-----------+---------+---------|
-     * |RESET |      |      |      |      |      |                    | KC_WH_U | KC_MS_BTN1| KC_MS_U | KC_MS_BTN2|         |         |
+     * |RESET |      |      |      |      |      |                    | balance | deskt7    | deskt8  | deskt9    |         |         |
      * |------+------+------+------+------+------|                    |---------+-----------+---------+-----------+---------+---------|
-     * |      |      |      |      |      |      |-------.    ,-------| KC_BTN3 | KC_MS_L   | KC_MS_D | KC_MS_R   |         |         |
+     * |      |      |      |      |      |      |-------.    ,-------|   bsp   | deskt4    | deskt5  | deskt6    |         |         |
      * |------+------+------+------+------+------|  MUTE |    |       |---------+-----------+---------+-----------+---------+---------|
-     * |      |      |      |      |      |      |-------|    |-------| KC_WH_D | PREV      | PLAY    | NEXT      |         |         |
+     * |      |      |      |      |      |      |-------|    |-------| deskt0  | deskt1    | deskt2  | deskt4    |         |         |
      * `-----------------------------------------/       /     \      \---------------------------------------------------------------'
      *            | TT L | TT R | LC_t |LG_t  | /LA_t   /       \ RA_t \  |RG_t  | RC_t |  -    |  =   |
      *            |      |      | Tab  |Spc   |/  Esc  /         \Enter \ |Spc   | CAPS |       |      |
@@ -123,13 +124,39 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /* first line */
         XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_COLEMAK, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         /* second line */
-        XXXXXXX, KC_F1, KC_F2, KC_F3, KC_F4, XXXXXXX, KC_WH_U, KC_BTN1, KC_MS_U, KC_BTN2, XXXXXXX, XXXXXXX,
+        XXXXXXX, KC_F1, KC_F2, KC_F3, KC_F4, XXXXXXX, C(G(KC_0)), LAG(KC_7), LAG(KC_8), LAG(KC_9), XXXXXXX, XXXXXXX,
         /* third line */
-        XXXXXXX, KC_F5, KC_F6, KC_F7, KC_F8, XXXXXXX, KC_BTN3, KC_MS_L, KC_MS_D, KC_MS_R, XXXXXXX, XXXXXXX,
+        XXXXXXX, KC_F5, KC_F6, KC_F7, KC_F8, XXXXXXX, C(G(KC_1)), LAG(KC_4), LAG(KC_5), LAG(KC_6), XXXXXXX, XXXXXXX,
         /* fourth line */
-        XXXXXXX, KC_F9, KC_F10, KC_F11, KC_F11, XXXXXXX, XXXXXXX, XXXXXXX, KC_WH_D, KC_MPRV, KC_MPLY, KC_MNXT, XXXXXXX, XXXXXXX,
+        XXXXXXX, KC_F9, KC_F10, KC_F11, KC_F12, XXXXXXX, XXXXXXX, XXXXXXX, LAG(KC_0), LAG(KC_1), LAG(KC_2), LAG(KC_3), XXXXXXX, XXXXXXX,
         /* thumb keys */
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______)};
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
+    /*
+     * ,-----------------------------------------.                    ,-------------------------------------------------------------.
+     * |      |      |      |      |      |      |                    | COLEMAK |           |         |           |         |         |
+     * |------+------+------+------+------+------|                    |---------+-----------+---------+-----------+---------+---------|
+     * |RESET | F1   | F2   | F3   | F4   |      |                    | balance | ->deskt7  | ->deskt8| ->deskt9  |         |         |
+     * |------+------+------+------+------+------|                    |---------+-----------+---------+-----------+---------+---------|
+     * |      | F5   | F6   | F7   | F8   |      |-------.    ,-------|   bsp   | ->deskt4  | ->deskt5| ->deskt6  |         |         |
+     * |------+------+------+------+------+------|  MUTE |    |       |---------+-----------+---------+-----------+---------+---------|
+     * |      | F9   | F10  | F11  | F1   |      |-------|    |-------| ->deskt0| ->deskt1  | ->deskt2| ->deskt4  |         |         |
+     * `-----------------------------------------/       /     \      \---------------------------------------------------------------'
+     *            | TT L | TT R | LC_t |LG_t  | /LA_t   /       \ RA_t \  |RG_t  | RC_t |  -    |  =   |
+     *            |      |      | Tab  |Spc   |/  Esc  /         \Enter \ |Spc   | CAPS |       |      |
+     *            `-----------------------------------'           '------''----------------------------'
+     */
+    [_DESKTOP] = LAYOUT(
+        /* first line */
+        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, KC_COLEMAK, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        /* second line */
+        XXXXXXX, KC_F1, KC_F2, KC_F3, KC_F4, XXXXXXX, C(G(KC_0)), RSG(KC_7), RSG(KC_8), RSG(KC_9), XXXXXXX, XXXXXXX,
+        /* third line */
+        XXXXXXX, KC_F5, KC_F6, KC_F7, KC_F8, XXXXXXX, C(G(KC_1)), RSG(KC_4), RSG(KC_5), RSG(KC_6), XXXXXXX, XXXXXXX,
+        /* fourth line */
+        XXXXXXX, KC_F9, KC_F10, KC_F11, KC_F12, XXXXXXX, XXXXXXX, XXXXXXX, RSG(KC_0), RSG(KC_1), RSG(KC_2), RSG(KC_3), XXXXXXX, XXXXXXX,
+        /* thumb keys */
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
+};
 
 #ifdef OLED_ENABLE
 
