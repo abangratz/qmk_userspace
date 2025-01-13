@@ -238,6 +238,14 @@ bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, ui
                 return true;
             }
             break;
+        case KC_R:
+            if (other_keycode == KC_S) {
+                return true;
+            }
+            if (other_keycode == KC_T) {
+                return true;
+            }
+            break;
     }
     return achordion_opposite_hands(tap_hold_record, other_record);
 }
@@ -250,12 +258,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         return false;
     }
     switch (keycode) {
-        case LCTL_T(KC_0):
-            if (record->tap.count && record->event.pressed) {
-                SEND_STRING(")");
-                return false;
-            }
-            return false;
         case KC_COLEMAK:
             if (record->event.pressed) {
                 set_single_persistent_default_layer(_COLEMAK);
