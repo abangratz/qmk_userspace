@@ -74,9 +74,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /* first line */
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         /* second line */
-        XXXXXXX, KC_EXLM, KC_AT, KC_SLSH, KC_BSLS, KC_TILD, XXXXXXX, KC_7, KC_8, KC_9, KC_KP_MINUS, _______,
+        XXXXXXX, KC_EXLM, KC_AT, KC_SLSH, KC_BSLS, KC_TILD, KC_LPRN, KC_7, KC_8, KC_9, KC_KP_MINUS, _______,
         /* third line */
-        XXXXXXX, KC_LBRC, KC_RBRC, KC_LPRN, LSFT_T(KC_0), KC_PLUS, XXXXXXX, RSFT_T(KC_4), KC_5, KC_6, KC_KP_PLUS, XXXXXXX,
+        XXXXXXX, KC_LBRC, KC_RBRC, MO(_RAISE), KC_LSFT, KC_PLUS, KC_RPRN, RSFT_T(KC_4), KC_5, KC_6, KC_KP_PLUS, XXXXXXX,
         /* fourth line */
         XXXXXXX, XXXXXXX, XXXXXXX, KC_UNDS, KC_ASTR, KC_MINUS, XXXXXXX, XXXXXXX, KC_0, KC_1, KC_2, KC_3, KC_DOT, XXXXXXX,
         /* thumb keys */
