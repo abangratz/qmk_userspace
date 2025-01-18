@@ -29,6 +29,20 @@ enum sofle_layers {
 
 enum custom_keycodes { KC_LSTRT = SAFE_RANGE, KC_LEND, KC_RARROW, KC_ELIXIRPIPE, KC_DOUBLEARROW, KC_LARROW, KC_HASHROCKET, KC_COLEMAK };
 
+enum combos { ES_LPRN, SE_4, ET_RPRN, TE_5 };
+
+const uint16_t PROGMEM es_combo[] = {LT(_LOWER, KC_E), LT(_LOWER, KC_S), COMBO_END};
+const uint16_t PROGMEM se_combo[] = {LT(_LOWER, KC_S), LT(_LOWER, KC_E), COMBO_END};
+const uint16_t PROGMEM et_combo[] = {LT(_LOWER, KC_E), LSFT_T(KC_T), COMBO_END};
+const uint16_t PROGMEM te_combo[] = {LSFT_T(KC_T), LT(_LOWER, KC_E), COMBO_END};
+
+combo_t key_combos[] = {
+    [ES_LPRN] = COMBO(es_combo, KC_LPRN),
+    [SE_4]    = COMBO(se_combo, KC_4),
+    [ET_RPRN] = COMBO(et_combo, KC_RPRN),
+    [TE_5]    = COMBO(te_combo, KC_5),
+};
+
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* COLEMAK
      * ,-----------------------------------------.                    ,-----------------------------------------.
