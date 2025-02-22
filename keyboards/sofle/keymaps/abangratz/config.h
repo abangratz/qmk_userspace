@@ -14,12 +14,12 @@
     limitations under the License.
 */
 #pragma once
-/* #define TAPPING_TERM 120 */
+#define TAPPING_TERM 120
 #define PERMISSIVE_HOLD
 #define TAPPING_FORCE_HOLD_PER_KEY
 /* #define TAPPING_TOGGLE 2 */
 #define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
-#define ACHORDION_STREAK_TIMEOUT
+#define ACHORDION_STREAK
 
 /* The way how "handedness" is decided (which half is which),
 see https://docs.qmk.fm/#/feature_split_keyboard?id=setting-handedness
@@ -46,8 +46,7 @@ for more options.
 #    define RGB_MATRIX_SPD_STEP 10
 #    define RGB_MATRIX_KEYPRESSES
 #    define RGB_MATRIX_FRAMEBUFFER_EFFECTS
-#    define RGB_MATRIX_SPLIT \
-        { 36, 36 }
+#    define RGB_MATRIX_SPLIT {36, 36}
 #    define SPLIT_TRANSPORT_MIRROR
 
 #endif
@@ -55,8 +54,7 @@ for more options.
 #ifdef RGBLIGHT_ENABLE
 #    define RGBLIGHT_SPLIT
 #    define RGBLED_NUM 72
-#    define RGB_SPLIT \
-        { 36, 36 }
+#    define RGB_SPLIT {36, 36}
 #    define RGBLIGHT_LIMIT_VAL 120
 #    define RGBLIGHT_SLEEP /* If defined, the RGB lighting will be switched off when the host goes to sleep */
                            // /*== all animations enable ==*/
