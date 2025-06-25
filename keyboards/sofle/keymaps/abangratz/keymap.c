@@ -29,9 +29,11 @@ enum sofle_layers {
 
 enum custom_keycodes { 
     KC_LSTRT = SAFE_RANGE, KC_LEND, KC_RARROW, KC_ELIXIRPIPE, KC_DOUBLEARROW, KC_LARROW, KC_HASHROCKET, KC_COLEMAK,
-    DE_AE, DE_OE, DE_UE, DE_SS, DE_UAE, DE_UOE, DE_UUE, DE_USS, SY_TM, SY_CP, UC_ASW, AC_GRV, AC_ACT, AC_CRF,
-    SY_EUR, SY_PND, SY_YEN 
+    DE_AE, DE_OE, DE_UE, DE_SS, DE_UAE, DE_UOE, DE_UUE, DE_USS, SY_TM, SY_CP, AC_GRV, AC_ACT, AC_CRF,
+    SY_EUR, SY_PND, SY_YEN, KC_MACTOG
 };
+
+static bool is_mac = true;
 
 // Tap Dance Definitions
 enum {
@@ -87,7 +89,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
     [_COLEMAK] = LAYOUT(
         /* first line */
-        CG_TOGG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DF(_GAMING), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        KC_MACTOG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DF(_GAMING), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         /* second line */
         KC_GRV, KC_Q, KC_W, KC_F, KC_P, KC_B, KC_J, KC_L, KC_U, KC_Y, KC_SCLN, KC_BSPC,
         /* third line */
@@ -95,7 +97,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /* fourth line */
         KC_LBRC, KC_Z, KC_X, KC_C, LT(_SPECIAL, KC_D), KC_V, KC_MUTE, DT_PRNT, KC_K, LT(_SPECIAL, KC_H), KC_COMM, KC_DOT, KC_BSLS, KC_RBRC,
         /* thumb keys */
-        TT(_LOWER), TT(_RAISE), LCTL_T(UC_ASW), LGUI_T(KC_SPC), LALT_T(KC_ESC), RALT_T(KC_ENT), RGUI_T(KC_SPC), RCTL_T(KC_CAPS), KC_MINS, KC_EQL),
+        TT(_LOWER), TT(_RAISE), LCTL_T(KC_TAB), LGUI_T(KC_SPC), LALT_T(KC_ESC), RALT_T(KC_ENT), RGUI_T(KC_SPC), RCTL_T(KC_CAPS), KC_MINS, KC_EQL),
     /* GAMING
      * ,------------------------------------------.                    ,-----------------------------------------.
      * |  F1   |  F2  |  F3  |  F4  |  F5  |  F6  |                    |DF(_C)|      |      |      |      |      |
@@ -248,16 +250,13 @@ static void print_status_narrow(void) {
     oled_write_P(PSTR("\n\n"), false);
     oled_write_ln_P(PSTR("MODE"), false);
     oled_write_ln_P(PSTR(""), false);
-    if (keymap_config.swap_lctl_lgui) {
+    if (is_mac) {
         oled_write_ln_P(PSTR("MAC"), false);
     } else {
         oled_write_ln_P(PSTR("WIN"), false);
     }
 
     switch (get_highest_layer(default_layer_state)) {
-        /* case _QWERTY: */
-        /*     oled_write_ln_P(PSTR("Qwrt"), false); */
-        /*     break; */
         case _COLEMAK:
             oled_write_ln_P(PSTR("Cole"), false);
             break;
@@ -271,7 +270,7 @@ static void print_status_narrow(void) {
     // Print current layer
     oled_write_ln_P(PSTR("LAYER"), false);
     switch (get_highest_layer(layer_state)) {
-        /* case _QWERTY: */
+        case _GAMING:
         case _COLEMAK:
             oled_write_P(PSTR("Base\n"), false);
             break;
@@ -350,32 +349,17 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     if (!process_caps_word(keycode, record)) {
         return false;
     }
-    bool is_mac = keymap_config.swap_lctl_lgui;
 
     switch (keycode) {
-        case KC_COLEMAK:
+        case KC_MACTOG:
             if (record->event.pressed) {
-                set_single_persistent_default_layer(_COLEMAK);
+                is_mac = !is_mac;
             }
             return false;
 
-        // Unified App Switcher
-        case UC_ASW:
+        case KC_COLEMAK:
             if (record->event.pressed) {
-                if (is_mac) {
-                    register_code(KC_LGUI);
-                    register_code(KC_TAB);
-                } else {
-                    register_code(KC_LALT);
-                    register_code(KC_TAB);
-                }
-            } else {
-                unregister_code(KC_TAB);
-                if (is_mac) {
-                    unregister_code(KC_LGUI);
-                } else {
-                    unregister_code(KC_LALT);
-                }
+                set_single_persistent_default_layer(_COLEMAK);
             }
             return false;
 
