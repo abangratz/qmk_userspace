@@ -226,6 +226,34 @@ bool oled_task_user(void) {
 
 #endif
 
+bool get_chordal_hold(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
+    // Exceptionally allow some one-handed chords for hotkeys.
+    switch (tap_hold_keycode) {
+        case LT(_RAISE, KC_I):
+            if (other_keycode == KC_E || other_keycode == KC_N) {
+                return true;
+            }
+            break;
+
+        case LT(_RAISE, KC_R):
+            if (other_keycode == KC_S || other_keycode == KC_T) {
+                return true;
+            }
+            break;
+    }
+    // Otherwise defer to the opposite hands rule.
+    return get_chordal_hold_default(tap_hold_record, other_record);
+}
+
+char chordal_hold_handedness(keypos_t key) {
+    if (key.col == 0 || key.col == MATRIX_COLS - 1) {
+        return '*'; // Exempt the outer columns.
+    }
+    // On split keyboards, typically, the first half of the rows are on the
+    // left, and the other half are on the right.
+    return key.row < MATRIX_ROWS / 2 ? 'L' : 'R';
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     if (!process_caps_word(keycode, record)) {
         return false;
