@@ -16,8 +16,6 @@
 
 #include QMK_KEYBOARD_H
 
-#include "features/achordion.h"
-
 enum sofle_layers {
     /* _M_XYZ = Mac Os, _W_XYZ = Win/Linux */
     _COLEMAK,
@@ -228,32 +226,7 @@ bool oled_task_user(void) {
 
 #endif
 
-bool achordion_chord(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
-    switch (tap_hold_keycode) {
-        case KC_I:
-            if (other_keycode == KC_E) {
-                return true;
-            }
-            if (other_keycode == KC_N) {
-                return true;
-            }
-            break;
-        case KC_R:
-            if (other_keycode == KC_S) {
-                return true;
-            }
-            if (other_keycode == KC_T) {
-                return true;
-            }
-            break;
-    }
-    return achordion_opposite_hands(tap_hold_record, other_record);
-}
-
 bool process_record_user(uint16_t keycode, keyrecord_t* record) {
-    if (!process_achordion(keycode, record)) {
-        return false;
-    }
     if (!process_caps_word(keycode, record)) {
         return false;
     }
@@ -290,10 +263,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
             break;
     }
     return true;
-}
-
-void matrix_scan_user(void) {
-    achordion_task();
 }
 
 #ifdef ENCODER_ENABLE
