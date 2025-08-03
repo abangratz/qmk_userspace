@@ -19,6 +19,7 @@
 enum sofle_layers {
     /* _M_XYZ = Mac Os, _W_XYZ = Win/Linux */
     _COLEMAK,
+    _GAMING,
     _LOWER,
     _RAISE,
     _ADJUST,
@@ -29,23 +30,23 @@ enum custom_keycodes { KC_LSTRT = SAFE_RANGE, KC_LEND, KC_RARROW, KC_ELIXIRPIPE,
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* COLEMAK
-     * ,-----------------------------------------.                    ,-----------------------------------------.
-     * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
-     * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
-     * |  `   |   Q  |   W  |   F  |   P  |   B  |                    |   J  |   L  |   U  |   Y  |   ;  | <-   |
-     * |------+------+------+------+------+------|                    |------+------+------+------+------+------|
-     * |  /   |LT_A/A|LT_R/R|LT_L/S| LS/T |LT_D/G|-------.    ,-------|   M  | LS/N |LT_L/E|LT_R/I|LT_A/O|  '   |
-     * |------+------+------+------+------+------| Mute  |    | DT Pri|------+------+------+------+------+------|
-     * |  [   |   Z  |   X  |   C  |   D  |   V  |-------|    |-------|   K  |   H  |   ,  |   .  | TT A |  ]   |
-     * `-----------------------------------------/       /     \      \-----------------------------------------'
-     *            | TT L | TT R | LC_t |LG_t  | /LA_t   /       \ RA_t \  |RG_t  | RC_t |  TT A |  =   |
-     *            |      |      | Tab  |Spc   |/  Esc  /         \Enter \ |Spc   | CAPS |       |      |
-     *            `----------------------------------'           '------''-----------------------------'
+     * ,------------------------------------------.                    ,-----------------------------------------.
+     * |CG_TOGG|      |      |      |      |      |                    |DF(_G)|      |      |      |      |      |
+     * |-------+------+------+------+------+------|                    |------+------+------+------+------+------|
+     * |   `   |   Q  |   W  |   F  |   P  |   B  |                    |   J  |   L  |   U  |   Y  |   ;  | <-   |
+     * |-------+------+------+------+------+------|                    |------+------+------+------+------+------|
+     * |   /   |LT_A/A|LT_R/R|LT_L/S| LS/T |LT_D/G|-------.    ,-------|   M  | LS/N |LT_L/E|LT_R/I|LT_A/O|  '   |
+     * |-------+------+------+------+------+------| Mute  |    | DT Pri|------+------+------+------+------+------|
+     * |   [   |   Z  |   X  |   C  |   D  |   V  |-------|    |-------|   K  |   H  |   ,  |   .  | TT A |  ]   |
+     * `------------------------------------------/       /     \      \-----------------------------------------'
+     *            | TT L | TT R | LC_t |LG_t  |  /LA_t   /       \ RA_t \  |RG_t  | RC_t |  TT A |  =   |
+     *            |      |      | Tab  |Spc   | /  Esc  /         \Enter \ |Spc   | CAPS |       |      |
+     *            `---------------------------''-------'           `------`'----------------------------'
      */
 
     [_COLEMAK] = LAYOUT(
         /* first line */
-        XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        CG_TOGG, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, DF(_GAMING), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         /* second line */
         KC_GRV, KC_Q, KC_W, KC_F, KC_P, KC_B, KC_J, KC_L, KC_U, KC_Y, KC_SCLN, KC_BSPC,
         /* third line */
@@ -54,6 +55,32 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_LBRC, KC_Z, KC_X, KC_C, KC_D, KC_V, KC_MUTE, DT_PRNT, KC_K, KC_H, KC_COMM, KC_DOT, KC_BSLS, KC_RBRC,
         /* thumb keys */
         TT(_LOWER), TT(_RAISE), LCTL_T(KC_TAB), LGUI_T(KC_SPC), LALT_T(KC_ESC), RALT_T(KC_ENT), RGUI_T(KC_SPC), RCTL_T(KC_CAPS), KC_MINS, KC_EQL),
+    /* GAMING
+     * ,------------------------------------------.                    ,-----------------------------------------.
+     * |  F1   |  F2  |  F3  |  F4  |  F5  |  F6  |                    |DF(_C)|      |      |      |      |      |
+     * |-------+------+------+------+------+------|                    |------+------+------+------+------+------|
+     * |  Tab  |   Q  |   W  |  E   |  R   |  T   |                    |   I  |   P  |   J  |   M  |   N  | <-   |
+     * |-------+------+------+------+------+------|                    |------+------+------+------+------+------|
+     * |  LSFT |   A  |   S  |  D   |  F   |  G   |-------.    ,-------|   O  |      |      |      |      |      |
+     * |-------+------+------+------+------+------| Mute  |    | DT Pri|------+------+------+------+------+------|
+     * |       |   Z  |   X  |   C  |  V   |  B   |-------|    |-------|      |      |      |      |      |      |
+     * `------------------------------------------/       /     \      \-----------------------------------------'
+     *            |      | LSFT | LCTRL|      |  /       /       \      \  |      |      |       |      |
+     *            |      |      |      |Spc   | /  Esc  /         \Enter \ |Spc   | CAPS |       |      |
+     *            `---------------------------''-------'           `------`'----------------------------'
+     */
+
+    [_GAMING] = LAYOUT(
+        /* first line */
+        KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, DF(_COLEMAK), XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        /* second line */
+        KC_TAB, KC_Q, KC_W, KC_E, KC_R, KC_T, KC_I, KC_P, KC_J, KC_M, KC_N, KC_BSPC,
+        /* third line */
+        KC_CAPS, KC_A, KC_S, KC_D, KC_F, KC_G, KC_O, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        /* fourth line */
+        KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_MUTE, DT_PRNT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
+        /* thumb keys */
+        XXXXXXX, KC_LSFT, KC_LCTL, KC_SPC, KC_ESC, KC_ENT, KC_SPC, KC_CAPS, XXXXXXX, XXXXXXX),
     /* LOWER
      * ,-----------------------------------------.                    ,-----------------------------------------.
      * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
@@ -181,6 +208,9 @@ static void print_status_narrow(void) {
         /*     break; */
         case _COLEMAK:
             oled_write_ln_P(PSTR("Cole"), false);
+            break;
+        case _GAMING:
+            oled_write_ln_P(PSTR("Game"), false);
             break;
         default:
             oled_write_P(PSTR("Undef"), false);
