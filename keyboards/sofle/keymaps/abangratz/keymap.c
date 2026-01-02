@@ -65,7 +65,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * |-------+------+------+------+------+------| Mute  |    | DT Pri|------+------+------+------+------+------|
      * |       |   Z  |   X  |   C  |  V   |  B   |-------|    |-------|      |      |      |      |      |      |
      * `------------------------------------------/       /     \      \-----------------------------------------'
-     *            |      | LSFT | LCTRL|      |  /       /       \      \  |      |      |       |      |
+     *            | LALT | LSFT | LCTRL|      |  /       /       \      \  |      |      |       |      |
      *            |      |      |      |Spc   | /  Esc  /         \Enter \ |Spc   | CAPS |       |      |
      *            `---------------------------''-------'           `------`'----------------------------'
      */
@@ -80,7 +80,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /* fourth line */
         KC_LSFT, KC_Z, KC_X, KC_C, KC_V, KC_B, KC_MUTE, DT_PRNT, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX,
         /* thumb keys */
-        XXXXXXX, KC_LSFT, KC_LCTL, KC_SPC, KC_ESC, KC_ENT, KC_SPC, KC_CAPS, XXXXXXX, XXXXXXX),
+        KC_LALT, KC_LSFT, KC_LCTL, KC_SPC, KC_ESC, KC_ENT, KC_SPC, KC_CAPS, XXXXXXX, XXXXXXX),
     /* LOWER
      * ,-----------------------------------------.                    ,-----------------------------------------.
      * |      |      |      |      |      |      |                    |      |      |      |      |      |      |
