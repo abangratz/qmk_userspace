@@ -256,7 +256,7 @@ bool oled_task_user(void) {
 
 #endif
 
-uint_16t get_tapping_term(uint_16t keycode, keyrecord_t* record) {
+uint16_t get_tapping_term(uint16_t keycode, keyrecord_t* record) {
     switch (keycode) {
         case LSFT_T(KC_T):
         case RSFT_T(KC_N):
