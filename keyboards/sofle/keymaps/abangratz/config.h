@@ -14,7 +14,8 @@
     limitations under the License.
 */
 #pragma once
-#define TAPPING_TERM 250
+/* #define TAPPING_TERM 250 */
+#define TAPPING_TERM_PER_KEY
 #define PERMISSIVE_HOLD
 #define FLOW_TAP_TERM 150
 #define CHORDAL_HOLD

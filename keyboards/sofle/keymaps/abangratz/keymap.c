@@ -256,6 +256,16 @@ bool oled_task_user(void) {
 
 #endif
 
+uint_16t get_tapping_term(uint_16t keycode, keyrecord_t* record) {
+    switch (keycode) {
+        case LSFT_T(KC_T):
+        case RSFT_T(KC_N):
+            return TAPPING_TERM + 1000;
+        default:
+            return TAPPING_TERM;
+    }
+}
+
 bool get_chordal_hold(uint16_t tap_hold_keycode, keyrecord_t* tap_hold_record, uint16_t other_keycode, keyrecord_t* other_record) {
     // Exceptionally allow some one-handed chords for hotkeys.
     switch (tap_hold_keycode) {
