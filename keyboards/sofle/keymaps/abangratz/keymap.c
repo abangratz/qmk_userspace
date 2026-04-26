@@ -23,10 +23,29 @@ enum sofle_layers {
     _LOWER,
     _RAISE,
     _ADJUST,
-    _DESKTOP
+    _DESKTOP,
+    _SPECIAL
 };
 
-enum custom_keycodes { KC_LSTRT = SAFE_RANGE, KC_LEND, KC_RARROW, KC_ELIXIRPIPE, KC_DOUBLEARROW, KC_LARROW, KC_HASHROCKET, KC_COLEMAK };
+enum custom_keycodes { 
+    KC_LSTRT = SAFE_RANGE, KC_LEND, KC_RARROW, KC_ELIXIRPIPE, KC_DOUBLEARROW, KC_LARROW, KC_HASHROCKET, KC_COLEMAK,
+    DE_AE, DE_OE, DE_UE, DE_SS, DE_UAE, DE_UOE, DE_UUE, DE_USS, SY_TM, SY_CP, UC_ASW, AC_GRV, AC_ACT, AC_CRF 
+};
+
+// Tap Dance Definitions
+enum {
+    TD_AE = 0,
+    TD_OE,
+    TD_UE,
+    TD_SS
+};
+
+qk_tap_dance_action_t tap_dance_actions[] = {
+    [TD_AE] = ACTION_TAP_DANCE_DOUBLE(DE_AE, DE_UAE),
+    [TD_OE] = ACTION_TAP_DANCE_DOUBLE(DE_OE, DE_UOE),
+    [TD_UE] = ACTION_TAP_DANCE_DOUBLE(DE_UE, DE_UUE),
+    [TD_SS] = ACTION_TAP_DANCE_DOUBLE(DE_SS, DE_USS)
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     /* COLEMAK
@@ -52,9 +71,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /* third line */
         KC_SLSH, LT(_ADJUST, KC_A), LT(_RAISE, KC_R), LT(_LOWER, KC_S), LSFT_T(KC_T), LT(_DESKTOP, KC_G), KC_M, RSFT_T(KC_N), LT(_LOWER, KC_E), LT(_RAISE, KC_I), LT(_ADJUST, KC_O), KC_QUOT,
         /* fourth line */
-        KC_LBRC, KC_Z, KC_X, KC_C, KC_D, KC_V, KC_MUTE, DT_PRNT, KC_K, KC_H, KC_COMM, KC_DOT, KC_BSLS, KC_RBRC,
+        KC_LBRC, KC_Z, KC_X, KC_C, LT(_SPECIAL, KC_D), KC_V, KC_MUTE, DT_PRNT, KC_K, LT(_SPECIAL, KC_H), KC_COMM, KC_DOT, KC_BSLS, KC_RBRC,
         /* thumb keys */
-        TT(_LOWER), TT(_RAISE), LCTL_T(KC_TAB), LGUI_T(KC_SPC), LALT_T(KC_ESC), RALT_T(KC_ENT), RGUI_T(KC_SPC), RCTL_T(KC_CAPS), KC_MINS, KC_EQL),
+        TT(_LOWER), TT(_RAISE), LCTL_T(UC_ASW), LGUI_T(KC_SPC), LALT_T(KC_ESC), RALT_T(KC_ENT), RGUI_T(KC_SPC), RCTL_T(KC_CAPS), KC_MINS, KC_EQL),
     /* GAMING
      * ,------------------------------------------.                    ,-----------------------------------------.
      * |  F1   |  F2  |  F3  |  F4  |  F5  |  F6  |                    |DF(_C)|      |      |      |      |      |
@@ -181,6 +200,17 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         XXXXXXX, KC_F9, KC_F10, KC_F11, KC_F12, XXXXXXX, XXXXXXX, XXXXXXX, RSG(KC_0), RSG(KC_1), RSG(KC_2), RSG(KC_3), XXXXXXX, XXXXXXX,
         /* thumb keys */
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
+    [_SPECIAL] = LAYOUT(
+        /* first line */
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        /* second line */
+        _______, _______, _______, _______, _______, _______, _______, _______, TD(TD_UE), _______, _______, _______,
+        /* third line */
+        _______, AC_GRV, AC_ACT, AC_CRF, SY_TM, _______, _______, TD(TD_AE), TD(TD_OE), TD(TD_UE), TD(TD_SS), _______,
+        /* fourth line */
+        _______, _______, _______, SY_CP, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
+        /* thumb keys */
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______),
 };
 
 #ifdef OLED_ENABLE
@@ -298,12 +328,81 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
     if (!process_caps_word(keycode, record)) {
         return false;
     }
+    bool is_mac = keymap_config.swap_lctl_lgui;
+
     switch (keycode) {
         case KC_COLEMAK:
             if (record->event.pressed) {
                 set_single_persistent_default_layer(_COLEMAK);
             }
             return false;
+
+        // Unified App Switcher
+        case UC_ASW:
+            if (record->event.pressed) {
+                if (is_mac) {
+                    register_code(KC_LGUI);
+                    register_code(KC_TAB);
+                } else {
+                    register_code(KC_LALT);
+                    register_code(KC_TAB);
+                }
+            } else {
+                unregister_code(KC_TAB);
+                if (is_mac) {
+                    unregister_code(KC_LGUI);
+                } else {
+                    unregister_code(KC_LALT);
+                }
+            }
+            return false;
+
+        // German Umlaute Logic
+        case DE_AE: case DE_OE: case DE_UE:
+        case DE_UAE: case DE_UOE: case DE_UUE:
+            if (record->event.pressed) {
+                bool is_upper = (keycode == DE_UAE || keycode == DE_UOE || keycode == DE_UUE);
+                uint16_t base = (keycode == DE_AE || keycode == DE_UAE) ? KC_A : 
+                               (keycode == DE_OE || keycode == DE_UOE) ? KC_O : KC_U;
+                if (is_mac) {
+                    tap_code16(A(KC_U));
+                    if (is_upper) tap_code16(S(base)); else tap_code(base);
+                } else {
+                    tap_code16(KC_DQUO);
+                    if (is_upper) tap_code16(S(base)); else tap_code(base);
+                }
+            }
+            return false;
+
+        case DE_SS: case DE_USS:
+            if (record->event.pressed) {
+                if (is_mac) {
+                    if (keycode == DE_USS) tap_code16(A(S(KC_S))); else tap_code16(A(KC_S));
+                } else {
+                    if (keycode == DE_USS) tap_code16(RALT(S(KC_S))); else tap_code16(RALT(KC_S));
+                }
+            }
+            return false;
+
+        // Accents
+        case AC_GRV: if (record->event.pressed) { if (is_mac) tap_code16(A(KC_GRV)); else tap_code(KC_GRV); } return false;
+        case AC_ACT: if (record->event.pressed) { if (is_mac) tap_code16(A(KC_E)); else tap_code(KC_QUOT); } return false;
+        case AC_CRF: if (record->event.pressed) { if (is_mac) tap_code16(A(KC_I)); else tap_code16(S(KC_6)); } return false;
+
+        // Symbols
+        case SY_TM: if (record->event.pressed && is_mac) tap_code16(A(KC_2)); return false;
+        case SY_CP: if (record->event.pressed) { if (is_mac) tap_code16(A(KC_G)); else tap_code16(RALT(KC_C)); } return false;
+
+        // Dead Keys Fix (US International Linux)
+        case KC_GRV:
+        case KC_QUOT:
+            if (!is_mac && record->event.pressed && get_highest_layer(layer_state) != _SPECIAL) {
+                tap_code(keycode);
+                tap_code(KC_SPC);
+                return false;
+            }
+            break;
+
         case KC_ELIXIRPIPE:
             if (record->event.pressed) {
                 SEND_STRING("|>");
