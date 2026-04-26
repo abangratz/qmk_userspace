@@ -33,6 +33,10 @@ enum custom_keycodes {
 };
 
 // Tap Dance Definitions
+typedef struct {
+    uint16_t keycode;
+} td_tap_t;
+
 enum {
     TD_AE = 0,
     TD_OE,
@@ -40,11 +44,35 @@ enum {
     TD_SS
 };
 
+void td_german_finished(qk_tap_dance_state_t *state, void *user_data) {
+    td_tap_t *td_tap = (td_tap_t *)user_data;
+    uint16_t keycode;
+    
+    // Choose between single and double tap keycodes
+    if (state->count == 1) {
+        keycode = td_tap->keycode; // e.g., DE_AE
+    } else {
+        // Map DE_AE -> DE_UAE, DE_OE -> DE_UOE, etc.
+        // Based on our enum order: AE, OE, UE, SS, UAE, UOE, UUE, USS
+        keycode = td_tap->keycode + 4; 
+    }
+    
+    // Trigger the macro logic in process_record_user
+    // We simulate a press and release
+    process_record_user(keycode, &(keyrecord_t){.event = {.pressed = true}});
+    process_record_user(keycode, &(keyrecord_t){.event = {.pressed = false}});
+}
+
+static td_tap_t td_ae_data = {DE_AE};
+static td_tap_t td_oe_data = {DE_OE};
+static td_tap_t td_ue_data = {DE_UE};
+static td_tap_t td_ss_data = {DE_SS};
+
 qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_AE] = ACTION_TAP_DANCE_DOUBLE(DE_AE, DE_UAE),
-    [TD_OE] = ACTION_TAP_DANCE_DOUBLE(DE_OE, DE_UOE),
-    [TD_UE] = ACTION_TAP_DANCE_DOUBLE(DE_UE, DE_UUE),
-    [TD_SS] = ACTION_TAP_DANCE_DOUBLE(DE_SS, DE_USS)
+    [TD_AE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_german_finished, NULL, &td_ae_data),
+    [TD_OE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_german_finished, NULL, &td_oe_data),
+    [TD_UE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_german_finished, NULL, &td_ue_data),
+    [TD_SS] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_german_finished, NULL, &td_ss_data)
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
