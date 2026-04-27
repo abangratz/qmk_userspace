@@ -29,14 +29,11 @@ enum sofle_layers {
 
 enum custom_keycodes { 
     KC_LSTRT = SAFE_RANGE, KC_LEND, KC_RARROW, KC_ELIXIRPIPE, KC_DOUBLEARROW, KC_LARROW, KC_HASHROCKET, KC_COLEMAK,
-    DE_AE, DE_OE, DE_UE, DE_SS, DE_UAE, DE_UOE, DE_UUE, DE_USS, SY_TM, SY_CP, UC_ASW, AC_GRV, AC_ACT, AC_CRF 
+    DE_AE, DE_OE, DE_UE, DE_SS, DE_UAE, DE_UOE, DE_UUE, DE_USS, SY_TM, SY_CP, UC_ASW, AC_GRV, AC_ACT, AC_CRF,
+    SY_EUR, SY_PND, SY_YEN 
 };
 
 // Tap Dance Definitions
-typedef struct {
-    uint16_t keycode;
-} td_tap_t;
-
 enum {
     TD_AE = 0,
     TD_OE,
@@ -44,35 +41,32 @@ enum {
     TD_SS
 };
 
-void td_german_finished(qk_tap_dance_state_t *state, void *user_data) {
-    td_tap_t *td_tap = (td_tap_t *)user_data;
-    uint16_t keycode;
-    
-    // Choose between single and double tap keycodes
-    if (state->count == 1) {
-        keycode = td_tap->keycode; // e.g., DE_AE
-    } else {
-        // Map DE_AE -> DE_UAE, DE_OE -> DE_UOE, etc.
-        // Based on our enum order: AE, OE, UE, SS, UAE, UOE, UUE, USS
-        keycode = td_tap->keycode + 4; 
-    }
-    
-    // Trigger the macro logic in process_record_user
-    // We simulate a press and release
+static void td_ae_finished(tap_dance_state_t *state, void *user_data) {
+    uint16_t keycode = (state->count == 1) ? DE_AE : DE_UAE;
+    process_record_user(keycode, &(keyrecord_t){.event = {.pressed = true}});
+    process_record_user(keycode, &(keyrecord_t){.event = {.pressed = false}});
+}
+static void td_oe_finished(tap_dance_state_t *state, void *user_data) {
+    uint16_t keycode = (state->count == 1) ? DE_OE : DE_UOE;
+    process_record_user(keycode, &(keyrecord_t){.event = {.pressed = true}});
+    process_record_user(keycode, &(keyrecord_t){.event = {.pressed = false}});
+}
+static void td_ue_finished(tap_dance_state_t *state, void *user_data) {
+    uint16_t keycode = (state->count == 1) ? DE_UE : DE_UUE;
+    process_record_user(keycode, &(keyrecord_t){.event = {.pressed = true}});
+    process_record_user(keycode, &(keyrecord_t){.event = {.pressed = false}});
+}
+static void td_ss_finished(tap_dance_state_t *state, void *user_data) {
+    uint16_t keycode = (state->count == 1) ? DE_SS : DE_USS;
     process_record_user(keycode, &(keyrecord_t){.event = {.pressed = true}});
     process_record_user(keycode, &(keyrecord_t){.event = {.pressed = false}});
 }
 
-static td_tap_t td_ae_data = {DE_AE};
-static td_tap_t td_oe_data = {DE_OE};
-static td_tap_t td_ue_data = {DE_UE};
-static td_tap_t td_ss_data = {DE_SS};
-
-qk_tap_dance_action_t tap_dance_actions[] = {
-    [TD_AE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_german_finished, NULL, &td_ae_data),
-    [TD_OE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_german_finished, NULL, &td_oe_data),
-    [TD_UE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_german_finished, NULL, &td_ue_data),
-    [TD_SS] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_german_finished, NULL, &td_ss_data)
+tap_dance_action_t tap_dance_actions[] = {
+    [TD_AE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_ae_finished, NULL),
+    [TD_OE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_oe_finished, NULL),
+    [TD_UE] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_ue_finished, NULL),
+    [TD_SS] = ACTION_TAP_DANCE_FN_ADVANCED(NULL, td_ss_finished, NULL)
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -232,7 +226,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         /* first line */
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,
         /* second line */
-        _______, _______, _______, _______, _______, _______, _______, _______, TD(TD_UE), _______, _______, _______,
+        _______, _______, _______, SY_PND, SY_EUR, _______, _______, _______, TD(TD_UE), SY_YEN, _______, _______,
         /* third line */
         _______, AC_GRV, AC_ACT, AC_CRF, SY_TM, _______, _______, TD(TD_AE), TD(TD_OE), TD(TD_UE), TD(TD_SS), _______,
         /* fourth line */
@@ -390,14 +384,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
         case DE_UAE: case DE_UOE: case DE_UUE:
             if (record->event.pressed) {
                 bool is_upper = (keycode == DE_UAE || keycode == DE_UOE || keycode == DE_UUE);
-                uint16_t base = (keycode == DE_AE || keycode == DE_UAE) ? KC_A : 
-                               (keycode == DE_OE || keycode == DE_UOE) ? KC_O : KC_U;
                 if (is_mac) {
+                    uint16_t base = (keycode == DE_AE || keycode == DE_UAE) ? KC_A : 
+                                   (keycode == DE_OE || keycode == DE_UOE) ? KC_O : KC_U;
                     tap_code16(A(KC_U));
                     if (is_upper) tap_code16(S(base)); else tap_code(base);
                 } else {
-                    tap_code16(KC_DQUO);
-                    if (is_upper) tap_code16(S(base)); else tap_code(base);
+                    // Linux US Alt. Intl uses specific AltGr positions: q=ä, p=ö, y=ü
+                    uint16_t altgr_key = (keycode == DE_AE || keycode == DE_UAE) ? KC_Q : 
+                                        (keycode == DE_OE || keycode == DE_UOE) ? KC_P : KC_Y;
+                    if (is_upper) tap_code16(RALT(S(altgr_key))); else tap_code16(RALT(altgr_key));
                 }
             }
             return false;
@@ -413,23 +409,30 @@ bool process_record_user(uint16_t keycode, keyrecord_t* record) {
             return false;
 
         // Accents
-        case AC_GRV: if (record->event.pressed) { if (is_mac) tap_code16(A(KC_GRV)); else tap_code(KC_GRV); } return false;
-        case AC_ACT: if (record->event.pressed) { if (is_mac) tap_code16(A(KC_E)); else tap_code(KC_QUOT); } return false;
-        case AC_CRF: if (record->event.pressed) { if (is_mac) tap_code16(A(KC_I)); else tap_code16(S(KC_6)); } return false;
+        case AC_GRV: if (record->event.pressed) { if (is_mac) tap_code16(A(KC_GRV)); else tap_code16(RALT(KC_GRV)); } return false;
+        case AC_ACT: if (record->event.pressed) { if (is_mac) tap_code16(A(KC_E)); else tap_code16(RALT(KC_QUOT)); } return false;
+        case AC_CRF: if (record->event.pressed) { if (is_mac) tap_code16(A(KC_I)); else tap_code16(RALT(KC_6)); } return false;
 
         // Symbols
         case SY_TM: if (record->event.pressed && is_mac) tap_code16(A(KC_2)); return false;
         case SY_CP: if (record->event.pressed) { if (is_mac) tap_code16(A(KC_G)); else tap_code16(RALT(KC_C)); } return false;
-
-        // Dead Keys Fix (US International Linux)
-        case KC_GRV:
-        case KC_QUOT:
-            if (!is_mac && record->event.pressed && get_highest_layer(layer_state) != _SPECIAL) {
-                tap_code(keycode);
-                tap_code(KC_SPC);
-                return false;
+        case SY_EUR:
+            if (record->event.pressed) {
+                if (is_mac) tap_code16(A(S(KC_2))); else tap_code16(RALT(KC_5));
             }
-            break;
+            return false;
+        case SY_PND:
+            if (record->event.pressed) {
+                if (is_mac) tap_code16(A(KC_3)); else tap_code16(RALT(S(KC_3)));
+            }
+            return false;
+        case SY_YEN:
+            if (record->event.pressed) {
+                if (is_mac) tap_code16(A(KC_Y)); else tap_code16(RALT(KC_MINS));
+            }
+            return false;
+
+
 
         case KC_ELIXIRPIPE:
             if (record->event.pressed) {
